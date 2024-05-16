@@ -33,6 +33,6 @@ def send_message(to_number, body_text):
     #     logger.error(f"Error sending message to {to_number}: {e}")
     message = client.messages.create(
         from_='whatsapp:+14155238886',
-        body=f'{body_text}',
+        body='hello',
         to='whatsapp:+381641174876'
     )
