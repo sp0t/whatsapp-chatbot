@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 # Internal imports
-from models import Conversation, SessionLocal
+# from models import Conversation, SessionLocal
 from utils import send_message, logger
 
 
@@ -17,12 +17,12 @@ openai.api_key = config("OPENAI_API_KEY")
 whatsapp_number = config("TO_NUMBER")
 
 # Dependency
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
+# def get_db():
+#     try:
+#         db = SessionLocal()
+#         yield db
+#     finally:
+#         db.close()
 
 @app.post("/message")
 # async def reply(Body: str = Form(), db: Session = Depends(get_db)):
