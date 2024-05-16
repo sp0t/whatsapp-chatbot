@@ -33,21 +33,22 @@ async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
     print(Body)
 
-    response = client.chat.completions.create(
-        messages=[
-        {
-            "role": "user",
-            "content": "Say this is a test",
-        }
-    ],
-        model="gpt-3.5-turbo",
-    )
+    # response = client.chat.completions.create(
+    #     messages=[
+    #     {
+    #         "role": "user",
+    #         "content": "Say this is a test",
+    #     }
+    # ],
+    #     model="gpt-3.5-turbo",
+    # )
 
-    print(response)
+    # print(response)
 
 
     # The generated text
     # chat_response = response.choices[0].text.strip()
+    chat_response = 'Hello'
 
     # Store the conversation in the database
     # try:
@@ -62,5 +63,5 @@ async def reply(Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    # send_message(whatsapp_number, chat_response)
+    send_message(whatsapp_number, chat_response)
     return ""
