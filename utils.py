@@ -21,9 +21,6 @@ logger = logging.getLogger(__name__)
 def send_message(to_number, body_text):
     print(f"whatsapp:{twilio_number}")
     print(f"whatsapp:{to_number}")
-    print(body_text)
-    print(account_sid)
-    print(auth_token)
     # try:
     #     message = client.messages.create(
     #         from_=f"whatsapp:{twilio_number}",
@@ -34,7 +31,7 @@ def send_message(to_number, body_text):
     # except Exception as e:
     #     logger.error(f"Error sending message to {to_number}: {e}")
     message = client.messages.create(
-        from_='whatsapp:+14155238886',
+        from_=f"whatsapp:{twilio_number}",
         body='Your appointment is coming up on July 21 at 3PM',
-        to='whatsapp:+381641174876'
+        to=f"whatsapp:{to_number}"
     )
