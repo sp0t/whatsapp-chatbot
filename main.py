@@ -39,17 +39,17 @@ async def reply(Body: str = Form(), db: Session = Depends(get_db)):
     chat_response = response.choices[0].text.strip()
 
     # Store the conversation in the database
-    try:
-        conversation = Conversation(
-            sender=whatsapp_number,
-            message=Body,
-            response=chat_response
-            )
-        db.add(conversation)
-        db.commit()
-        logger.info(f"Conversation #{conversation.id} stored in database")
-    except SQLAlchemyError as e:
-        db.rollback()
-        logger.error(f"Error storing conversation in database: {e}")
+    # try:
+    #     conversation = Conversation(
+    #         sender=whatsapp_number,
+    #         message=Body,
+    #         response=chat_response
+    #         )
+    #     db.add(conversation)
+    #     db.commit()
+    #     logger.info(f"Conversation #{conversation.id} stored in database")
+    # except SQLAlchemyError as e:
+    #     db.rollback()
+    #     logger.error(f"Error storing conversation in database: {e}")
     send_message(whatsapp_number, chat_response)
     return ""
