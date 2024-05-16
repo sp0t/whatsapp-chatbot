@@ -35,8 +35,8 @@ async def reply(Body: str = Form()):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo-16k",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Hello!"}
+            {"role": "system", "content": Body},
+            {"role": "user", "content": Body}
         ]
     )
 
