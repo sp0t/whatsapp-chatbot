@@ -48,7 +48,7 @@ async def reply(Body: str = Form()):
 
     # The generated text
     # chat_response = response.choices[0].text.strip()
-    chat_response = 'Hello'
+    chat_response = 'This is affilate AI'
 
     # Store the conversation in the database
     # try:
