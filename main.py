@@ -1,4 +1,5 @@
 # Third-party imports
+import attr
 import openai
 from fastapi import FastAPI, Form, Depends
 from decouple import config
