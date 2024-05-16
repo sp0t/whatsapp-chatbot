@@ -32,6 +32,6 @@ def send_message(to_number, body_text):
     #     logger.error(f"Error sending message to {to_number}: {e}")
     message = client.messages.create(
         from_=f"whatsapp:{twilio_number}",
-        body='Your appointment is coming up on July 21 at 3PM',
+        body= body_text,
         to=f"whatsapp:{to_number}"
     )
