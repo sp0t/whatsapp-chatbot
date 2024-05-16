@@ -31,7 +31,7 @@ def send_message(to_number, body_text):
     # except Exception as e:
     #     logger.error(f"Error sending message to {to_number}: {e}")
     message = client.messages.create(
-        body= body_text,
-        from_=f"whatsapp:{twilio_number}",
-        to=f"whatsapp:{to_number}"
+        from_='whatsapp:+14155238886',
+        body='dfd',
+        to='whatsapp:+381641174876'
     )
