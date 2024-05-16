@@ -28,6 +28,8 @@ whatsapp_number = config("TO_NUMBER")
 # async def reply(Body: str = Form(), db: Session = Depends(get_db)):
 async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
+    print(Body)
+    
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=Body,
