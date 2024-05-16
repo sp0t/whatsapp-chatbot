@@ -31,24 +31,20 @@ whatsapp_number = config("TO_NUMBER")
 # async def reply(Body: str = Form(), db: Session = Depends(get_db)):
 async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
-    print(Body)
 
-    # response = client.chat.completions.create(
-    #     messages=[
-    #     {
-    #         "role": "user",
-    #         "content": "Say this is a test",
-    #     }
-    # ],
-    #     model="gpt-3.5-turbo",
-    # )
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo-16k",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello!"}
+        ]
+    )
 
-    # print(response)
+    print(response)
 
 
     # The generated text
     # chat_response = response.choices[0].text.strip()
-    chat_response = 'This is affilate AI'
 
     # Store the conversation in the database
     # try:
@@ -63,5 +59,5 @@ async def reply(Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    send_message(whatsapp_number, chat_response)
+    send_message(whatsapp_number, response)
     return ""
