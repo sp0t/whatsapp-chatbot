@@ -22,12 +22,19 @@ def send_message(to_number, body_text):
     print(f"whatsapp:{twilio_number}")
     print(f"whatsapp:{to_number}")
     print(body_text)
-    try:
-        message = client.messages.create(
-            from_=f"whatsapp:{twilio_number}",
-            body=body_text,
-            to=f"whatsapp:{to_number}"
-            )
-        logger.info(f"Message sent to {to_number}: {message.body}")
-    except Exception as e:
-        logger.error(f"Error sending message to {to_number}: {e}")
+    print(account_sid)
+    print(auth_token)
+    # try:
+    #     message = client.messages.create(
+    #         from_=f"whatsapp:{twilio_number}",
+    #         body=body_text,
+    #         to=f"whatsapp:{to_number}"
+    #         )
+    #     logger.info(f"Message sent to {to_number}: {message.body}")
+    # except Exception as e:
+    #     logger.error(f"Error sending message to {to_number}: {e}")
+    message = client.messages.create(
+        from_='whatsapp:+14155238886',
+        body='Your appointment is coming up on July 21 at 3PM',
+        to='whatsapp:+381641174876'
+    )
