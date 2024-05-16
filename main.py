@@ -39,7 +39,7 @@ async def reply(Body: str = Form()):
         ]
     )
 
-    print(response)
+    print(response.choices[0].message.content)
 
 
     # The generated text
@@ -58,5 +58,5 @@ async def reply(Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    send_message(whatsapp_number, response)
+    send_message(whatsapp_number, response.choices[0].message.content)
     return ""
