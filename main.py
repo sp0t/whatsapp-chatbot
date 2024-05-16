@@ -33,10 +33,9 @@ async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-16k",
+        model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": Body},
-            {"role": "user", "content": Body}
+            {role: "user", content: Body}
         ]
     )
 
