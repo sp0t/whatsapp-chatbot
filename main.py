@@ -1,6 +1,6 @@
 # Third-party imports
 import attr
-import openai
+from openai import OpenAI
 from fastapi import FastAPI, Form, Depends
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
@@ -13,7 +13,10 @@ from utils import send_message, logger
 
 app = FastAPI()
 # Set up the OpenAI API client
-openai.api_key = config("OPENAI_API_KEY")
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=config("OPENAI_API_KEY"),
+)
 whatsapp_number = config("TO_NUMBER")
 
 # Dependency
@@ -29,18 +32,18 @@ whatsapp_number = config("TO_NUMBER")
 async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
     print(Body)
-    
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=Body,
-        max_tokens=200,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
+
+    # response = openai.Completion.create(
+    #     engine="text-davinci-002",
+    #     prompt=Body,
+    #     max_tokens=200,
+    #     n=1,
+    #     stop=None,
+    #     temperature=0.5,
+    # )
 
     # The generated text
-    chat_response = response.choices[0].text.strip()
+    # chat_response = response.choices[0].text.strip()
 
     # Store the conversation in the database
     # try:
@@ -55,5 +58,5 @@ async def reply(Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    send_message(whatsapp_number, chat_response)
+    # send_message(whatsapp_number, chat_response)
     return ""
