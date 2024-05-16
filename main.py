@@ -24,7 +24,8 @@ def get_db():
         db.close()
 
 @app.post("/message")
-async def reply(Body: str = Form(), db: Session = Depends(get_db)):
+# async def reply(Body: str = Form(), db: Session = Depends(get_db)):
+async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
     response = openai.Completion.create(
         engine="text-davinci-002",
