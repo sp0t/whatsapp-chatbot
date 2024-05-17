@@ -29,7 +29,7 @@ client = OpenAI(
 
 @app.post("/message")
 # async def reply(Body: str = Form(), db: Session = Depends(get_db)):
-async def reply(request: Request, request: Request, Body: str = Form()):
+async def reply(request: Request, Body: str = Form()):
 
     # Extract the phone number from the incoming webhook request
     form_data = await request.form()
