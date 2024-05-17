@@ -1,7 +1,7 @@
 # Third-party imports
 import attr
 from openai import OpenAI
-from fastapi import FastAPI, Form, Depends
+from fastapi import FastAPI, Form, Depends, Request
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
