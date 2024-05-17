@@ -34,12 +34,13 @@ async def reply(request: Request, Body: str = Form()):
     # Extract the phone number from the incoming webhook request
     form_data = await request.form()
     whatsapp_number = form_data['From'].split("whatsapp:")[-1]
+    print(f"Sending the ChatGPT response to this number: {whatsapp_number}")
 
     # Call the OpenAI API to generate text with GPT-4.0
 
     messages = [{"role": "user", "content": Body}]
     messages.append({"role": "system", "content": "You're an investor, a serial founder and you've sold many startups. You understand nothing but business."})
-    response = openai.ChatCompletion.create(
+    response = lient.chat.completions.create(
         model="gpt-4-turbo",
         messages=messages,
         max_tokens=200,
