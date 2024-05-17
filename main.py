@@ -33,7 +33,7 @@ async def reply(Body: str = Form()):
     # Call the OpenAI API to generate text with GPT-3.5
 
     response = client.chat.completions.create(
-        model="GPT-3.5 Turbo",
+        model="gpt-4-turbo",
         messages=[
             {'role': "user", 'content': Body}
         ]
