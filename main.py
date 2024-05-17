@@ -37,14 +37,19 @@ async def reply(request: Request, Body: str = Form()):
 
     # Call the OpenAI API to generate text with GPT-4.0
 
-    response = client.chat.completions.create(
+    messages = [{"role": "user", "content": Body}]
+    messages.append({"role": "system", "content": "You're an investor, a serial founder and you've sold many startups. You understand nothing but business."})
+    response = openai.ChatCompletion.create(
         model="gpt-4-turbo",
-        messages=[
-            {'role': "user", 'content': Body}
-        ]
-    )
+        messages=messages,
+        max_tokens=200,
+        n=1,
+        stop=None,
+        temperature=0.5
+        )
 
-    print(response.choices[0].message.content)
+    # The generated text
+    chatgpt_response = response.choices[0].message.content
 
 
     # The generated text
@@ -63,5 +68,5 @@ async def reply(request: Request, Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    send_message(whatsapp_number, response.choices[0].message.content)
+    send_message(whatsapp_number, chatgpt_response)
     return ""
