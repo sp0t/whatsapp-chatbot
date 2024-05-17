@@ -17,7 +17,7 @@ client = OpenAI(
     # This is the default and can be omitted
     api_key=config("OPENAI_API_KEY"),
 )
-whatsapp_number = config("TO_NUMBER")
+# whatsapp_number = config("TO_NUMBER")
 
 # Dependency
 # def get_db():
@@ -29,11 +29,16 @@ whatsapp_number = config("TO_NUMBER")
 
 @app.post("/message")
 # async def reply(Body: str = Form(), db: Session = Depends(get_db)):
-async def reply(Body: str = Form()):
-    # Call the OpenAI API to generate text with GPT-3.5
+async def reply(request: Request, request: Request, Body: str = Form()):
+
+    # Extract the phone number from the incoming webhook request
+    form_data = await request.form()
+    whatsapp_number = form_data['From'].split("whatsapp:")[-1]
+
+    # Call the OpenAI API to generate text with GPT-4.0
 
     response = client.chat.completions.create(
-        model="gpt-4-turbo",
+        model="gpt-4o-turbo",
         messages=[
             {'role': "user", 'content': Body}
         ]
