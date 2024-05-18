@@ -5,6 +5,7 @@ from fastapi import FastAPI, Form, Depends, Request
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+from bs4 import BeautifulSoup
 
 # Internal imports
 # from models import Conversation, User, SessionLocal
@@ -12,13 +13,24 @@ from utils import send_message, logger
 
 
 app = FastAPI()
-welcome_msg = "Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
+welcome_msg = f"person1: Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
 # Set up the OpenAI API client
 client = OpenAI(
     # This is the default and can be omitted
     api_key=config("OPENAI_API_KEY"),
 )
 # whatsapp_number = config("TO_NUMBER")
+
+def find_product_link(search_url):
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+    
+    response = requests.get(search_url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    for link in soup.find_all('a'):
+        href = link.get('href')
+        return href
+    return "No Amazon link found"
 
 # Dependency
 # def get_db():
@@ -50,7 +62,10 @@ async def reply(request: Request, Body: str = Form()):
     #     return ""
 
     #check message validation
-    checm_msg = f"Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.  the repliy message is the '{Body}'. Is this right question?  answer with only 'Yes' or 'No'."
+    checm_msg = f"{welcome_msg}. \
+                person2: {Body} \
+                Is this right question?   \
+                answer with only 'Yes' or 'No'."
     
     messages = [{"role": "user", "content": checm_msg}]
 
