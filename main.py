@@ -13,7 +13,7 @@ from utils import send_message, logger
 
 
 app = FastAPI()
-welcome_msg = f"person1: Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
+welcome_msg = f"question: Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
 # Set up the OpenAI API client
 client = OpenAI(
     # This is the default and can be omitted
@@ -63,8 +63,8 @@ async def reply(request: Request, Body: str = Form()):
 
     #check message validation
     checm_msg = f"{welcome_msg}. \
-                person2: {Body} \
-                Is this right question?   \
+                reply: {Body} \
+                Is this right reply?   \
                 answer with only 'Yes' or 'No'."
     
     messages = [{"role": "user", "content": checm_msg}]
