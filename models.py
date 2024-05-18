@@ -25,5 +25,10 @@ class Conversation(Base):
     message = Column(String)
     response = Column(String)
 
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    whatsapp_number = Column(String, unique=True)
+    has_received_welcome = Column(Boolean, default=False)
 
 Base.metadata.create_all(engine)

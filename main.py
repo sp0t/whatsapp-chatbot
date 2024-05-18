@@ -7,11 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 # Internal imports
-# from models import Conversation, SessionLocal
+# from models import Conversation, User, SessionLocal
 from utils import send_message, logger
 
 
 app = FastAPI()
+welcome_msg = "Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
 # Set up the OpenAI API client
 client = OpenAI(
     # This is the default and can be omitted
@@ -36,10 +37,27 @@ async def reply(request: Request, Body: str = Form()):
     whatsapp_number = form_data['From'].split("whatsapp:")[-1]
     print(f"Sending the ChatGPT response to this number: {whatsapp_number}")
 
-    # Call the OpenAI API to generate text with GPT-4.0
+    # Check if the user exists and has received the welcome message
+    # user = db.query(User).filter(User.whatsapp_number == whatsapp_number).first()
+    # if not user:
+    #     # First time user, send welcome message and store in DB
+    #     user = User(whatsapp_number=whatsapp_number, has_received_welcome=True)
+    #     db.add(user)
+    #     db.commit()
+    #     send_message(whatsapp_number, 
+    #     "Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for (or ask me to ask you questions about a product I want to buy). I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product."
+    #     )
+    #     return ""
 
-    messages = [{"role": "user", "content": Body}]
-    messages.append({"role": "system", "content": "You're an investor, a serial founder and you've sold many startups. You understand nothing but business."})
+    #check message validation
+    checm_msg = f"Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.
+                 
+                 the repliy message is the '{Body}'.
+                 Is this right question?
+                 answer with only 'Yes' or 'No'."
+    
+    messages = [{"role": "user", "content": checm_msg}]
+
     response = client.chat.completions.create(
         model="gpt-4-turbo",
         messages=messages,
@@ -49,12 +67,24 @@ async def reply(request: Request, Body: str = Form()):
         temperature=0.5
         )
 
-    # The generated text
     chatgpt_response = response.choices[0].message.content
 
 
-    # The generated text
-    # chat_response = response.choices[0].text.strip()
+    # Call the OpenAI API to generate text with GPT-4.0
+
+    # messages = [{"role": "user", "content": Body}]
+    # messages.append({"role": "system", "content": "You're an investor, a serial founder and you've sold many startups. You understand nothing but business."})
+    # response = client.chat.completions.create(
+    #     model="gpt-4-turbo",
+    #     messages=messages,
+    #     max_tokens=200,
+    #     n=1,
+    #     stop=None,
+    #     temperature=0.5
+    #     )
+
+    # # The generated text
+    # chatgpt_response = response.choices[0].message.content
 
     # Store the conversation in the database
     # try:
