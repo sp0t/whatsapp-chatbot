@@ -50,7 +50,7 @@ async def reply(request: Request, Body: str = Form()):
     #     return ""
 
     #check message validation
-    checm_msg = f"Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.                the repliy message is the '{Body}'. Is this right question?  answer with only 'Yes' or 'No'."
+    checm_msg = f"Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.  the repliy message is the '{Body}'. Is this right question?  answer with only 'Yes' or 'No'."
     
     messages = [{"role": "user", "content": checm_msg}]
 
