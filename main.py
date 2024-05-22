@@ -68,7 +68,7 @@ async def reply(request: Request, Body: str = Form()):
                 answer with only 'Yes' or 'No'."
     
     print(checm_msg)
-    messages = [{"role": "user", "content":checm_msg}]
+    messages = [{"role": "user", "content":Body}]
 
     response = client.chat.completions.create(
         model="gpt-4-turbo",
