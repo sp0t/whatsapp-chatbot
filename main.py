@@ -83,14 +83,14 @@ async def reply(request: Request, Body: str = Form()):
     length = 0
 
     while True:
-        if (len(chatgpt_response) - length) > 1600:
-            token_message = chatgpt_response[length:1600]
-            length = length + 1600
+        if (len(chatgpt_response) - length) > 1500:
+            token_message = chatgpt_response[length:1500]
+            length = length + 1500
             print(token_message)
             send_message(whatsapp_number, token_message)
 
-        if (len(chatgpt_response) - length) <= 1600: 
-            token_message = chatgpt_response[length:1600]
+        if (len(chatgpt_response) - length) <= 1500: 
+            token_message = chatgpt_response[length:1500]
             print(token_message)
             send_message(whatsapp_number, token_message)
             break
