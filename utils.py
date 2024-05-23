@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 def send_message(to_number, body_text):
     try:
         message = client.messages.create(
+            content_sid = 'MG0afd81bc69feb07172bd42642e50a68c',
             from_=f"whatsapp:{twilio_number}",
             body=body_text,
             to=f"whatsapp:{to_number}"
