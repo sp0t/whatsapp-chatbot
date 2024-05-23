@@ -80,6 +80,19 @@ async def reply(request: Request, Body: str = Form()):
         )
 
     chatgpt_response = response.choices[0].message.content
+    length = 0
+
+    while True:
+        if (len(chatgpt_response) - length) > 1600:
+            token_message = chatgpt_response[length:1600]
+            length = length + 1600
+            send_message(whatsapp_number, token_message)
+
+        if (len(chatgpt_response) - length) <= 1600: 
+            token_message = chatgpt_response[length:1600]
+            send_message(whatsapp_number, token_message)
+            break
+
 
 
     # Call the OpenAI API to generate text with GPT-4.0
@@ -111,5 +124,5 @@ async def reply(request: Request, Body: str = Form()):
     # except SQLAlchemyError as e:
     #     db.rollback()
     #     logger.error(f"Error storing conversation in database: {e}")
-    send_message(whatsapp_number, chatgpt_response)
+    # send_message(whatsapp_number, chatgpt_response)
     return ""
