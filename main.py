@@ -24,7 +24,7 @@ client = OpenAI(
 def find_product_link(search_url):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
     
-    response = requests.get(search_url, headers=headers)
+    response = Request.get(search_url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
     
     for link in soup.find_all('a'):
@@ -128,3 +128,6 @@ async def reply(request: Request, Body: str = Form()):
     #     logger.error(f"Error storing conversation in database: {e}")
     # send_message(whatsapp_number, chatgpt_response)
     return ""
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
