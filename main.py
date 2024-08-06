@@ -69,7 +69,7 @@ async def reply(request: Request, Body: str = Form()):
         },
         {
         "role": "user",
-        "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
+        "content": f"Here is a product specification: [{Body}]. You can only give me product name without description"
         }
     ]
 
