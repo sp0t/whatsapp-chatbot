@@ -65,7 +65,7 @@ async def reply(request: Request, Body: str = Form()):
     messages = [
         {
         "role": "system",
-        "content": "You are an AI model that provides information based on general market trends and known products. You do not have real-time data access."
+        "content": "You are an AI model that provides information based on general market trends and known products. You can try on google search as well."
         },
         {
         "role": "user",
