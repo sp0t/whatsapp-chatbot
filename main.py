@@ -61,14 +61,17 @@ async def reply(request: Request, Body: str = Form()):
     #     )
     #     return ""
 
-    #check message validation
-    checm_msg = f"{welcome_msg}. \
-                reply: '{Body}'. \
-                Is this right reply?   \
-                answer with only 'Yes' or 'No'."
-    
-    print(checm_msg)
-    messages = [{"role": "user", "content":Body}]
+    # messages = [{"role": "user", "content":Body}]
+    messages = [
+        {
+        "role": "system",
+        "content": "You are a helpful assistant that extracts product information."
+        },
+        {
+        "role": "user",
+        "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
+        }
+    ]
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
