@@ -83,6 +83,29 @@ async def reply(request: Request, Body: str = Form()):
         )
 
     chatgpt_response = response.choices[0].message.content
+
+    messages = [
+        {
+        "role": "system",
+        "content": "You are an AI model that provides information based on general market trends and known products. You can try on google search as well."
+        },
+        {
+        "role": "user",
+        "content": f"just give me product name with out any text."
+        }
+    ]
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+        max_tokens=1000,
+        n=1,
+        stop=None,
+        temperature=0.1
+        )
+
+    
+    chatgpt_response = response.choices[0].message.content
     length = 0
 
     while True:
