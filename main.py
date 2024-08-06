@@ -91,7 +91,7 @@ async def reply(request: Request, Body: str = Form()):
         },
         {
         "role": "user",
-        "content": f"just give me product name with out any text."
+        "content": f"just give me top three product name without any description and start text."
         }
     ]
 
