@@ -65,7 +65,7 @@ async def reply(request: Request, Body: str = Form()):
     messages = [
         {
         "role": "system",
-        "content": "the best price PC on amazon"
+        "content": "You are a helpful assistant that extracts product information."
         },
         {
         "role": "user",
