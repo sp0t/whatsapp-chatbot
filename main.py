@@ -69,13 +69,11 @@ async def reply(request: Request, Body: str = Form()):
         },
         {
         "role": "user",
-        # "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
-        "content": "the best price PC on amazon"
+        "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
         }
     ]
 
     response = client.chat.completions.create(
-        # model="gpt-3.5-turbo",
         model="gpt-4o",
         messages=messages,
         max_tokens=200,
