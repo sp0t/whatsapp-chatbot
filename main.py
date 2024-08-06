@@ -69,7 +69,8 @@ async def reply(request: Request, Body: str = Form()):
         },
         {
         "role": "user",
-        "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
+        # "content": f"Here is a product specification: [{Body}]. Can you provide the product name?"
+        "content": "What is the best price PC on Amazon right now? Please provide the product name and details."
         }
     ]
 
