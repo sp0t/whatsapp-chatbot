@@ -79,7 +79,7 @@ async def reply(request: Request, Body: str = Form()):
         max_tokens=1000,
         n=1,
         stop=None,
-        temperature=0.2
+        temperature=0.1
         )
 
     chatgpt_response = response.choices[0].message.content
