@@ -76,10 +76,10 @@ async def reply(request: Request, Body: str = Form()):
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=messages,
-        max_tokens=200,
+        max_tokens=50,
         n=1,
         stop=None,
-        temperature=0.5
+        temperature=0.2
         )
 
     chatgpt_response = response.choices[0].message.content
