@@ -75,7 +75,8 @@ async def reply(request: Request, Body: str = Form()):
     ]
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        # model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=messages,
         max_tokens=200,
         n=1,
