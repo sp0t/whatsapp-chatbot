@@ -91,7 +91,7 @@ async def reply(request: Request, Body: str = Form()):
         },
         {
         "role": "user",
-        "content": f"[{chatgpt_response}]." 
+        "content": f"{chatgpt_response}." 
                     f"just give me top three product name without any description and start text from the above text. I don't need any other text. only 3 product name."
         }
     ]
