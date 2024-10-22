@@ -88,7 +88,6 @@ def get_affiliate_link(token_message):
 
         if(len(product_ids)>0):
             affiliate_links = aliexpress.get_affiliate_links(f"https://aliexpress.com/item/{product_ids[0]}.html")
-            print(affiliate_links[0].promotion_link)
             affiliate_links_string =affiliate_links_string + affiliate_links[0].promotion_link + "\n"
     return affiliate_links_string
 
