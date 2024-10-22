@@ -13,6 +13,7 @@ import re
 
 app = FastAPI()
 welcome_msg = f"question: 'Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.'"
+aliexpress = AliexpressApi('510446', 'mo9VdZB7r3807hwwuev0x9tOhDrUf0CB', models.Language.EN, models.Currency.EUR, 'BOB')
 # Set up the OpenAI API client
 client = OpenAI(
     # This is the default and can be omitted
