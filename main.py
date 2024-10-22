@@ -75,6 +75,7 @@ def get_affiliate_link(token_message):
     product_names = split_by_numbered_list(token_message)
     affiliate_links_string = ""
     for product_name in product_names:
+        print(product_name)
         product_ids = get_product_ids(product_name)
 
         count = 0
