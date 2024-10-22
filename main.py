@@ -113,47 +113,13 @@ async def reply(request: Request, Body: str = Form()):
         if (len(chatgpt_response) - length) > 1500:
             token_message = chatgpt_response[length:1500]
             length = length + 1500
-            print(token_message)
             send_message(whatsapp_number, token_message)
 
         if (len(chatgpt_response) - length) <= 1500: 
             token_message = chatgpt_response[length:1500]
-            print(token_message)
             send_message(whatsapp_number, token_message)
             break
 
-
-
-    # Call the OpenAI API to generate text with GPT-4.0
-
-    # messages = [{"role": "user", "content": Body}]
-    # messages.append({"role": "system", "content": "You're an investor, a serial founder and you've sold many startups. You understand nothing but business."})
-    # response = client.chat.completions.create(
-    #     model="gpt-4-turbo",
-    #     messages=messages,
-    #     max_tokens=200,
-    #     n=1,
-    #     stop=None,
-    #     temperature=0.5
-    #     )
-
-    # # The generated text
-    # chatgpt_response = response.choices[0].message.content
-
-    # Store the conversation in the database
-    # try:
-    #     conversation = Conversation(
-    #         sender=whatsapp_number,
-    #         message=Body,
-    #         response=chat_response
-    #         )
-    #     db.add(conversation)
-    #     db.commit()
-    #     logger.info(f"Conversation #{conversation.id} stored in database")
-    # except SQLAlchemyError as e:
-    #     db.rollback()
-    #     logger.error(f"Error storing conversation in database: {e}")
-    # send_message(whatsapp_number, chatgpt_response)
     return ""
 if __name__ == "__main__":
     import uvicorn

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 # Sending message logic through Twilio Messaging API
 def send_message(to_number, body_text):
+    print('body_text', body_text)
     try:
         message = client.messages.create(
             from_=f"whatsapp:{twilio_number}",
