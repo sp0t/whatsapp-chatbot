@@ -171,11 +171,13 @@ async def reply(request: Request, Body: str = Form()):
         if (len(chatgpt_response) - length) > 1500:
             token_message = chatgpt_response[length:1500]
             length = length + 1500
-            send_message(whatsapp_number, token_message)
+            link_text = get_affiliate_link(token_message)
+            send_message(whatsapp_number, link_text)
 
         if (len(chatgpt_response) - length) <= 1500: 
             token_message = chatgpt_response[length:1500]
-            send_message(whatsapp_number, token_message)
+            link_text = get_affiliate_link(token_message)
+            send_message(whatsapp_number, link_text)
             break
 
     return ""
