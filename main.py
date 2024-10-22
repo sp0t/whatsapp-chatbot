@@ -78,6 +78,8 @@ def get_affiliate_link(token_message):
         print(product_name)
         product_ids = get_product_ids(product_name)
 
+        print('product_ids', product_ids)
+
         count = 0
 
         while len(product_ids)==0:
