@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from utils import send_message, logger
 import requests
 from aliexpress_api import AliexpressApi, models
+import re
 
 app = FastAPI()
 welcome_msg = f"question: 'Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.'"
