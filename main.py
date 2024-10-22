@@ -6,6 +6,8 @@ from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup
+import requests
+from aliexpress_api import AliexpressApi, models
 
 # Internal imports
 # from models import Conversation, User, SessionLocal
@@ -32,6 +34,64 @@ def find_product_link(search_url):
         return href
     return "No Amazon link found"
 
+def split_by_numbered_list(data):
+    # Use regex to split by numbers followed by a period and optional spaces
+    parts = re.split(r'\d+\.\s*', data)
+    
+    # Remove any empty strings from the split result
+    # The first part will be empty because the split happens before the first number
+    parts = [part.strip() for part in parts if part.strip()]
+    
+    return parts
+
+def get_product_ids(product_name):
+    # Prepare the search URL
+    search_url = f"https://es.aliexpress.com/w/wholesale-{product_name}.html?spm=a2g0o.home.search.0"
+
+    # Send a GET request to the search URL
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
+    }
+    response = requests.get(search_url, headers=headers)
+   
+    # Check if the request was successful
+    if response.status_code != 200:
+        print("Failed to retrieve data")
+        return []
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find product links and extract IDs
+    product_ids = []
+    for link in soup.find_all('a', href=True):
+        href = link['href']
+        if '/item/' in href:
+            # Extract product ID from the URL
+            product_id = href.split('/item/')[1].split('.')[0]
+            product_ids.append(product_id)
+    return product_ids
+
+def get_affiliate_link(token_message):
+    product_names = split_by_numbered_list(token_message)
+    affiliate_links_string = ""
+    for product_name in product_names:
+        product_ids = get_product_ids(product_name)
+
+        count = 0
+
+        while len(product_ids)==0:
+            # code to execute
+            product_ids = get_product_ids(product_name)
+            count = count+1
+            if count>10:
+                break 
+
+        if(len(product_ids)>0):
+            affiliate_links = aliexpress.get_affiliate_links(f"https://aliexpress.com/item/{product_ids[0]}.html")
+            print(affiliate_links[0].promotion_link)
+            affiliate_links_string =affiliate_links_string + affiliate_links[0].promotion_link + "\n"
+    return affiliate_links_string
 # Dependency
 # def get_db():
 #     try:
@@ -110,14 +170,20 @@ async def reply(request: Request, Body: str = Form()):
     length = 0
 
     while True:
-        if (len(chatgpt_response) - length) > 1500:
+        if (len(chatgpt_ressponse) - length) > 1500:
             token_message = chatgpt_response[length:1500]
             length = length + 1500
-            send_message(whatsapp_number, token_message)
+            print(token_message)
+            affiliate_links = get_affiliate_link(token_message)
+            if(affiliate_links==""):
+                affiliate_links = "Sorry, can't get affiliate links"
+            send_message(whatsapp_number, affiliate_links)
 
         if (len(chatgpt_response) - length) <= 1500: 
             token_message = chatgpt_response[length:1500]
-            send_message(whatsapp_number, token_message)
+            print(token_message)
+            affiliate_links = get_affiliate_link(token_message)
+            send_message(whatsapp_number, affiliate_links)
             break
 
     return ""
