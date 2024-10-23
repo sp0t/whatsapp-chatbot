@@ -11,6 +11,11 @@ import requests
 from aliexpress_api import AliexpressApi, models
 import re
 
+from parsel import Selector
+from typing import Dict
+import httpx
+import json
+
 app = FastAPI()
 welcome_msg = f"question: 'Hi there, I'm your shopping buddy, an expert that can help you find the product that best suits your needs and limits. You can ask me to recommend a product or you can specify what you are looking for. I will give you recommendations, explain the reasoning behind them and even direct you to the cheapest site to purchase that product.'"
 aliexpress = AliexpressApi('510446', 'mo9VdZB7r3807hwwuev0x9tOhDrUf0CB', models.Language.EN, models.Currency.EUR, 'BOB')
@@ -20,6 +25,15 @@ client = OpenAI(
     api_key=config("OPENAI_API_KEY"),
 )
 # whatsapp_number = config("TO_NUMBER")
+
+def split_by_numbered_list(data):
+    # Use regex to split by numbers followed by a period and optional spaces
+    parts = re.split(r'\d+\.\s*', data)
+    
+    # Remove any empty strings from the split result
+    # The first part will be empty because the split happens before the first number
+    parts = [part.strip() for part in parts if part.strip()]
+    return parts
 
 def find_product_link(search_url):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
@@ -45,7 +59,6 @@ def split_by_numbered_list(data):
 def get_product_ids(product_name):
     # Prepare the search URL
     search_url = f"https://es.aliexpress.com/w/wholesale-{product_name}.html?spm=a2g0o.home.search.0"
-
     # Send a GET request to the search URL
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
@@ -56,7 +69,6 @@ def get_product_ids(product_name):
     if response.status_code != 200:
         print("Failed to retrieve data")
         return []
-        
 
     # Parse the HTML content
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -69,30 +81,39 @@ def get_product_ids(product_name):
             # Extract product ID from the URL
             product_id = href.split('/item/')[1].split('.')[0]
             product_ids.append(product_id)
+
     return product_ids
 
-def get_affiliate_link(token_message):
-    product_names = split_by_numbered_list(token_message)
-    affiliate_links_string = ""
+def extract_search(response) -> Dict:
+    """extract json data from search page"""
+    sel = Selector(response.text)
+    # find script with result.pagectore data in it._it_t_=
+    script_with_data = sel.xpath('//script[contains(.,"_init_data_=")]')
+    # select page data from javascript variable in script tag using regex
+    data = json.loads(script_with_data.re(r'_init_data_\s*=\s*{\s*data:\s*({.+}) }')[0])
+    return data['data']['root']['fields']
+
+def parse_search(response):
+    """Parse search page response for product preview results"""
+    data = extract_search(response)
+    parsed = []
+    for result in data["mods"]["itemList"]["content"]:
+        parsed.append(result["productId"])
+    return parsed
+
+def get_affiliate_link(data):
+    product_names = split_by_numbered_list(data)
     for product_name in product_names:
-        print(product_name)
-        product_ids = get_product_ids(product_name)
-
-        print('product_ids', product_ids)
-
-        count = 0
-
-        while len(product_ids)==0:
-            # code to execute
-            product_ids = get_product_ids(product_name)
-            count = count+1
-            if count>10:
-                break 
-
-        if(len(product_ids)>0):
-            affiliate_links = aliexpress.get_affiliate_links(f"https://aliexpress.com/item/{product_ids[0]}.html")
-            print(affiliate_links)
-            affiliate_links_string =affiliate_links_string + affiliate_links[0].promotion_link + "\n"
+        resp = httpx.get(f"https://es.aliexpress.com/w/wholesale-{product_name}.html?spm=a2g0o.home.search.0", follow_redirects=True)
+        product_ids = json.dumps(parse_search(resp), indent=2, ensure_ascii=False)
+        affiliate_links_string = ""
+        for product_id in product_ids:
+            
+            affiliate_links = aliexpress.get_affiliate_links(f"https://aliexpress.com/item/{product_id}.html")
+            if hasattr(affiliate_links[0], 'promotion_link'):
+                print(affiliate_links[0].promotion_link)
+                affiliate_links_string = affiliate_links_string + affiliate_links[0].promotion_link + "\n"
+                break
     return affiliate_links_string
 
 # Dependency
